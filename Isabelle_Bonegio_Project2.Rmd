@@ -228,5 +228,9 @@ PM2.5 shows no strong seasonal pattern; however, January–February 2020 had low
 
 ## AI Use Statement
 
-I used Claude to help set up my GitHub/RStudio connection, structure and explain the data cleaning function, and either draft or check code for the tables and plots. I also used Claude to help set up the README. I checked Claude's output by running each step myself, confirming the cleaned datasets had the expected number of rows, verifying that the table values and plot patterns made sense, and asking it to explain each line of code to ensure that I knew what it was doing.
+I used Claude to help set up my GitHub/RStudio connection, structure and explain the data cleaning function, and either draft or check code for the tables and plots. I also used Claude to help set up the README. I checked Claude's output by running each step myself, confirming the cleaned datasets had the expected number of rows, verifying that the table values and plot patterns made sense, and asking it to explain each line of code to ensure that I knew what it was doing. 
+
+
+
+GitHub repository: <https://github.com/isabonegio27/Bonegio_Isabelle_Biostat721_Project_2>
 
