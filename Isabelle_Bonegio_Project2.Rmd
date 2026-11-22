@@ -1,0 +1,98 @@
+---
+title: 'Project 2: Air Pollution in Durham County'
+author: "Isabelle Bonegio"
+date: "2026-11-22"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+# Hide code, messages, and warnings in the final Word document
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+# Load packages
+library(tidyverse)   # dplyr, readr, purrr, ggplot2, etc.
+library(lubridate)   # date handling
+```
+
+
+```{r function}
+# process_air_data()
+# Function Purpose: 
+  # Read in and clean one year of EPA air quality data from 
+  #the RDU airport monitor
+
+# Each Argument:
+  # file_path = file path to each year's CSV file
+  # o3_units = the units for ozone levels either ppm or ppb
+
+# Function Returns:
+  # a data frame with:
+  # row = each day
+  # columns = date, co, pm25, o3
+
+clean_data <- function(file_path, o3_units = "ppm") {
+
+# Check that o3_units is a valid option
+  
+  if (!(o3_units %in% c("ppm", "ppb"))) {
+    stop("o3_units must be either 'ppm' or 'ppb'")
+  }
+
+# Read in the data
+  
+dat <- read.csv(file_path)
+
+# Keep the date and the 3 pollutant columns (no units columns needed)
+
+dat <- dat[, c(1, 2, 4, 6)]
+names(dat) <- c("date", "co", "pm25", "o3")
+
+# Format the date variable
+
+dat$date <- as.Date(dat$date, format = "%m/%d/%Y")
+
+# Remove duplicate rows 
+
+dat <- unique(dat)
+
+# Set negative values to 0
+
+  for (i in 2:ncol(dat)) {
+    dat[!is.na(dat[, i]) & dat[, i] < 0, i] <- 0
+  }
+
+# Calculate the daily average for days with multiple measurements 
+
+dat <- dat %>%
+    group_by(date) %>%
+    summarize(
+      co   = ifelse(all(is.na(co)),   NA, mean(co,   na.rm = TRUE)),
+      pm25 = ifelse(all(is.na(pm25)), NA, mean(pm25, na.rm = TRUE)),
+      o3   = ifelse(all(is.na(o3)),   NA, mean(o3,   na.rm = TRUE))
+    )
+
+
+# Convert ozone to ppb if requested
+
+  if (o3_units == "ppb") {
+    dat$o3 <- dat$o3 * 1000
+  }
+
+  return(dat)
+}
+```
+
+```{r combine}
+# Run the function on each year and add a year variable
+aq18 <- clean_data(file_path = "data/AQ_2018.csv")
+aq18$year <- 2018
+
+aq19 <- clean_data(file_path = "data/AQ_2019.csv")
+aq19$year <- 2019
+
+aq20 <- clean_data(file_path = "data/AQ_2020.csv")
+aq20$year <- 2020
+
+# Stack the three years into one dataset
+air_quality <- rbind(aq18, aq19, aq20)
+```
