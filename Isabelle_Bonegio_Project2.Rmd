@@ -14,6 +14,7 @@ library(tidyverse)   # dplyr, readr, purrr, ggplot2, etc.
 library(lubridate)   # date handling
 ```
 
+## Clean Data
 
 ```{r function}
 # process_air_data()
@@ -82,8 +83,11 @@ dat <- dat %>%
 }
 ```
 
+## Combine into One Dataset
+
 ```{r combine}
-# Run the function on each year and add a year variable
+# Run the function on each year and combine them into one dataset
+
 aq18 <- clean_data(file_path = "data/AQ_2018.csv")
 aq18$year <- 2018
 
@@ -95,4 +99,49 @@ aq20$year <- 2020
 
 # Stack the three years into one dataset
 air_quality <- rbind(aq18, aq19, aq20)
+```
+
+## Summary Tables
+
+```{r table-2018}
+# Min and max of each pollutant in 2018
+tab18 <- data.frame(
+  Pollutant = c("CO (ppm)", "PM2.5 (µg/m³)", "O3 (ppm)"),
+  Minimum   = c(min(aq18$co, na.rm = TRUE), min(aq18$pm25, na.rm = TRUE), min(aq18$o3, na.rm = TRUE)),
+  Maximum   = c(max(aq18$co, na.rm = TRUE), max(aq18$pm25, na.rm = TRUE), max(aq18$o3, na.rm = TRUE))
+)
+
+# Make table for min and max in 2018
+
+knitr::kable(tab18, digits = 3, format.args = list(nsmall = 3),
+             caption = "Table 1. Minimum and maximum daily pollutant concentrations, RDU airport, 2018")
+```
+
+```{r table-2019}
+#Min and max of each pollutant in 2019
+tab19 <- data.frame(
+  Pollutant = c("CO (ppm)", "PM2.5 (µg/m³)", "O3 (ppm)"),
+  Minimum   = c(min(aq19$co, na.rm = TRUE), min(aq19$pm25, na.rm = TRUE), min(aq19$o3, na.rm = TRUE)),
+  Maximum   = c(max(aq19$co, na.rm = TRUE), max(aq19$pm25, na.rm = TRUE), max(aq19$o3, na.rm = TRUE))
+)
+
+# Make table for min and max in 2019
+
+knitr::kable(tab19, digits = 3, format.args = list(nsmall = 3),
+             caption = "Table 2. Minimum and maximum daily pollutant concentrations, RDU airport, 2019")
+```
+
+```{r table-2020}
+# Min and max of each pollutant in 2020
+
+tab20 <- data.frame(
+  Pollutant = c("CO (ppm)", "PM2.5 (µg/m³)", "O3 (ppm)"),
+  Minimum   = c(min(aq20$co, na.rm = TRUE), min(aq20$pm25, na.rm = TRUE), min(aq20$o3, na.rm = TRUE)),
+  Maximum   = c(max(aq20$co, na.rm = TRUE), max(aq20$pm25, na.rm = TRUE), max(aq20$o3, na.rm = TRUE))
+)
+
+# Make table for min and max in 2020
+
+knitr::kable(tab20, digits = 3, format.args = list(nsmall = 3),
+             caption = "Table 3. Minimum and maximum daily pollutant concentrations, RDU airport, January–April 2020")
 ```
