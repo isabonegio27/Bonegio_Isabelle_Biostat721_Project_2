@@ -183,12 +183,35 @@ plot1_data <- rbind(co_month, o3_month)
 
 ggplot(plot1_data, aes(x = month, y = avg, color = pollutant)) +
   geom_point(size = 3) +
-  geom_errorbar(aes(ymin = LB, ymax = UB), width = 0.4) +
+  geom_errorbar(aes(ymin = LB, ymax = UB), width = 0.3) +
   facet_wrap(~ pollutant, ncol = 1, scales = "free_y") +
     scale_color_manual(name = "Pollutant", values = c(acadia[1], acadia[8])) + 
   xlab("Month") +
   ylab("Mean daily concentration (95% CI)") +
   ggtitle("Monthly Mean CO and O3 Concentrations, RDU Airport, 2018–2020") +
+  theme_classic() +
+  theme(legend.position = "bottom")
+```
+
+```{r plot2-ci, fig.width = 8, fig.height = 5}
+# Monthly mean and 95% CI of PM2.5 for each year
+
+plot2_data <- air_quality %>%
+  filter(!is.na(pm25)) %>%
+  group_by(year, month) %>%
+  summarize(avg = mean(pm25), s = sd(pm25), n = n()) %>%
+  mutate(LB = avg - 1.96 * s / sqrt(n),
+         UB = avg + 1.96 * s / sqrt(n))
+
+# Make the plot
+
+ggplot(plot2_data, aes(x = month, y = avg, color = factor(year))) +
+  geom_point(size = 2.5, position = position_dodge(width = 0.7)) +
+  geom_errorbar(aes(ymin = LB, ymax = UB), width = 0.3, position = position_dodge(width = 0.7)) +
+  scale_color_manual(name = "Year", values = c(acadia[2], acadia[7], acadia[9])) +
+  xlab("Month") +
+  ylab("Mean daily PM2.5 concentration (µg/m³), 95% CI") +
+  ggtitle("Monthly Mean PM2.5 by Year, RDU Airport, 2018–2020") +
   theme_classic() +
   theme(legend.position = "bottom")
 ```
