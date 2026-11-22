@@ -189,6 +189,10 @@ ggplot(plot1_data, aes(x = month, y = avg, color = pollutant)) +
   theme(legend.position = "bottom")
 ```
 
+## Plot 1 Justification
+
+Since CO and o3 are measured on very different scales, I put each pollutant on its own scale with different Y-axes for each one. This allowed the graphs to both be readable, while still allowing viewers to see the seasonal trends among each pollutant.  
+
 ```{r plot2-ci, fig.width = 8, fig.height = 5}
 # Monthly mean and 95% CI of PM2.5 for each year
 

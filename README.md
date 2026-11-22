@@ -5,7 +5,7 @@ Isabelle Bonegio: BIOSTAT 721 Project 2
 ## Description
 
 This project analyzes daily air quality data (CO, PM2.5, and O3)
-as part of a study on associations between air pollution's and
+as part of a study on associations between air pollution and
 sickle cell disease (SCD) in Durham County, North Carolina.
 
 ## Data Source
@@ -16,7 +16,7 @@ covering January 2018 through April 2020.
 
 ## File Structure
 
-- `data/` = three EPA data files
+- `data` = three EPA data files
 - `Isabelle_Bonegio_Project2.Rmd` = R Markdown file with all code
 - `Isabelle_Bonegio_Project2.docx` = final knitted Word report
 - `Bonegio_Isabelle_Biostat721_Project2.Rproj` = RStudio project
