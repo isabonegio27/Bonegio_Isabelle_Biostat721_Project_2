@@ -10,8 +10,10 @@ output: word_document
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
 # Load packages
-library(tidyverse)   # dplyr, readr, purrr, ggplot2, etc.
-library(lubridate)   # date handling
+library(tidyverse)   
+library(lubridate)
+library(NatParksPalettes) 
+acadia <- natparks.pals("Acadia")
 ```
 
 ## Clean Data
@@ -144,4 +146,49 @@ tab20 <- data.frame(
 
 knitr::kable(tab20, digits = 3, format.args = list(nsmall = 3),
              caption = "Table 3. Minimum and maximum daily pollutant concentrations, RDU airport, January–April 2020")
+```
+
+## Plots
+
+```{r plot1, fig.width = 7, fig.height = 6}
+# Add a month variable
+
+air_quality$month <- factor(format(air_quality$date, "%b"), levels = month.abb)
+
+# Monthly mean and 95% CI for CO
+
+co_month <- air_quality %>%
+  filter(!is.na(co)) %>%                     
+  group_by(month) %>%                   
+  summarize(avg = mean(co), s = sd(co), n = n()) %>%
+  mutate(LB = avg - 1.96 * s / sqrt(n),
+         UB = avg + 1.96 * s / sqrt(n),
+         pollutant = "CO (ppm)")
+
+# Monthly mean and 95% CI for o3
+
+o3_month <- air_quality %>%
+  filter(!is.na(o3)) %>%
+  group_by(month) %>%
+  summarize(avg = mean(o3), s = sd(o3), n = n()) %>%
+  mutate(LB = avg - 1.96 * s / sqrt(n),
+         UB = avg + 1.96 * s / sqrt(n),
+         pollutant = "O3 (ppm)")
+
+# Stack CO and o3 together
+
+plot1_data <- rbind(co_month, o3_month)
+
+# Plot: points = monthly mean, error bars = 95% CI
+
+ggplot(plot1_data, aes(x = month, y = avg, color = pollutant)) +
+  geom_point(size = 3) +
+  geom_errorbar(aes(ymin = LB, ymax = UB), width = 0.4) +
+  facet_wrap(~ pollutant, ncol = 1, scales = "free_y") +
+    scale_color_manual(name = "Pollutant", values = c(acadia[1], acadia[8])) + 
+  xlab("Month") +
+  ylab("Mean daily concentration (95% CI)") +
+  ggtitle("Monthly Mean CO and O3 Concentrations, RDU Airport, 2018–2020") +
+  theme_classic() +
+  theme(legend.position = "bottom")
 ```
