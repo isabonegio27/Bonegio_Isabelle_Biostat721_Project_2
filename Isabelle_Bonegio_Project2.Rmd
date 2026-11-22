@@ -16,8 +16,6 @@ library(NatParksPalettes)
 acadia <- natparks.pals("Acadia")
 ```
 
-## Clean Data
-
 ```{r function}
 # process_air_data()
 # Function Purpose: 
@@ -84,8 +82,6 @@ dat <- dat %>%
   return(dat)
 }
 ```
-
-## Combine into One Dataset
 
 ```{r combine}
 # Run the function on each year and combine them into one dataset
@@ -206,8 +202,8 @@ plot2_data <- air_quality %>%
 # Make the plot
 
 ggplot(plot2_data, aes(x = month, y = avg, color = factor(year))) +
-  geom_point(size = 2.5, position = position_dodge(width = 0.7)) +
-  geom_errorbar(aes(ymin = LB, ymax = UB), width = 0.3, position = position_dodge(width = 0.7)) +
+  geom_point(size = 2.5, position = position_dodge(width = 0.5)) +
+  geom_errorbar(aes(ymin = LB, ymax = UB), width = 0.3, position = position_dodge(width = 0.5)) +
   scale_color_manual(name = "Year", values = c(acadia[2], acadia[7], acadia[9])) +
   xlab("Month") +
   ylab("Mean daily PM2.5 concentration (µg/m³), 95% CI") +
@@ -215,3 +211,18 @@ ggplot(plot2_data, aes(x = month, y = avg, color = factor(year))) +
   theme_classic() +
   theme(legend.position = "bottom")
 ```
+
+## Plot 2 Justification
+
+I chose to do a plot with monthly means of pm2.5 and 95% confidence intervals (with one point per year for each month) because the plot looked neat and easy to read, showed the uncertainty of each month's estimate as well as the variability between months, and because it matched the style of Plot 1 which made the overall report look professional.  
+
+## Interpretation
+
+CO is highest in late fall and winter (October - January) and lowest in summer, while o3 peaks in late spring and summer (April - July) and is lowest in late fall and winter (November - January). Since 2020 data stop in April, estimates for May–December are based on only two years of data and should be interpreted with more caution because with a smaller sample size the estimate will be less precise and one unusual year could have more of an effect.  
+
+PM2.5 shows no strong seasonal pattern; however, January–February 2020 had lower PM2.5 than the same months in 2018 and 2019. 
+
+## AI Use Statement
+
+I used Claude to help set up my GitHub/RStudio connection, structure and explain the data cleaning function, and either draft or check code for the tables and plots. I also used Claude to help set up the README. I checked Claude's output by running each step myself, confirming the cleaned datasets had the expected number of rows, verifying that the table values and plot patterns made sense, and asking it to explain each line of code to ensure that I knew what it was doing.
+
